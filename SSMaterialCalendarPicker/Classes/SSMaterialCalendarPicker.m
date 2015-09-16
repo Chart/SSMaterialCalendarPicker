@@ -161,16 +161,21 @@
 }
 
 - (void)closeAnimated {
-    [UIView animateWithDuration:0.6f animations:^{
-        self.backgroundView.alpha = kAlphaHide;
-        self.pickerViewTopDistance.constant = -kPickerViewHeight-16;
-        self.calendarHeaderTopDistance.constant = -kCalendarHeaderHeight-16;
-        [self layoutIfNeeded];
-    } completion:^(BOOL finished) {
-        self.hidden = YES;
-        if (self.shouldRemove)
-            [self removeFromSuperview];
-    }];
+	if ([self.delegate respondsToSelector:@selector(pickerWillDisappear)])
+		[self.delegate pickerWillDisappear];
+	[UIView animateWithDuration:0.6f animations:^{
+		self.backgroundView.alpha = kAlphaHide;
+		self.pickerViewTopDistance.constant = -kPickerViewHeight-16;
+		self.calendarHeaderTopDistance.constant = -kCalendarHeaderHeight-16;
+		[self layoutIfNeeded];
+	} completion:^(BOOL finished) {
+		self.hidden = YES;
+		if (self.shouldRemove)
+			[self removeFromSuperview];
+		
+		if ([self.delegate respondsToSelector:@selector(pickerDidDisappear)])
+			[self.delegate pickerDidDisappear];
+	}];
 }
 
 #pragma mark - Date Selected
@@ -181,6 +186,7 @@
         [self.delegate rangeSelectedWithStartDate:self.startDate andEndDate:self.startDate];
     else if (self.startDate == nil && self.endDate != nil)
         [self.delegate rangeSelectedWithStartDate:self.endDate andEndDate:self.endDate];
+
     [self closeAnimated];
 }
 

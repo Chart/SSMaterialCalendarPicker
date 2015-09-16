@@ -45,4 +45,8 @@
 
 - (void)rangeSelectedWithStartDate:(NSDate *)startDate andEndDate:(NSDate *)endDate;
 
+@optional
+- (void)pickerWillDisappear;
+- (void)pickerDidDisappear;
+
 @end
